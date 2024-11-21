@@ -1,0 +1,4 @@
+100   Tom         Assistant    12/12/52    10000
+98    Harry       Clerk        13/11/67    20000
+101   Dick        Salesman     12/12/78    15000
+97    Thomas      Clerk        11/10/98    16000

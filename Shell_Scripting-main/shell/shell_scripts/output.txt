@@ -1,0 +1,178 @@
+#!/bin/bash
+
+sum=0
+
+for number in "$@"; do
+    sum=$((sum + number))
+done
+
+echo "The sum of the numbers is: $sum"
+
+
+--- End of addnum.sh ---
+
+#!/bin/bash
+
+echo "Files in the current directory:"
+files=(*)
+
+if [ ${#files[@]} -eq 0 ]; then
+    echo "No files found in the current directory."
+    exit 1
+fi
+
+for file in "${files[@]}"; do
+    if [ -f "$file" ]; then
+        echo "$file"
+    fi
+done
+
+max_file=""
+min_file=""
+max_size=0
+min_size=$(stat -c %s "${files[0]}")
+
+for file in "${files[@]}"; do
+    if [ -f "$file" ]; then
+        file_size=$(stat -c %s "$file")
+
+        if [ $file_size -gt $max_size ]; then
+            max_size=$file_size
+            max_file=$file
+        fi
+
+        if [ $file_size -lt $min_size ]; then
+            min_size=$file_size
+            min_file=$file
+        fi
+    fi
+done
+
+if [ -n "$max_file" ] && [ -n "$min_file" ]; then
+    echo "File with maximum size: $max_file ($max_size bytes)"
+    echo "File with minimum size: $min_file ($min_size bytes)"
+else
+    echo "No regular files found in the current directory."
+fi
+
+
+--- End of currentdirectory.sh ---
+
+100   Tom         Assistant    12/12/52    10000
+98    Harry       Clerk        13/11/67    20000
+101   Dick        Salesman     12/12/78    15000
+97    Thomas      Clerk        11/10/98    16000
+
+--- End of demo.txt ---
+
+
+
+--- End of dest.txt ---
+
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <file_to_remove>"
+    exit 1
+fi
+
+file_to_remove=$1
+
+backup_dir="/home/user1/backup"
+
+if [ ! -f "$file_to_remove" ]; then
+    echo "Error: File '$file_to_remove' does not exist."
+    exit 1
+fi
+
+if [ ! -d "$backup_dir" ]; then
+    mkdir -p "$backup_dir"
+fi
+
+cp "$file_to_remove" "$backup_dir"
+
+if [ $? -eq 0 ]; then
+    echo "Backup of '$file_to_remove' created in '$backup_dir'."
+    
+    rm "$file_to_remove"
+    
+    if [ $? -eq 0 ]; then
+        echo "File '$file_to_remove' has been successfully removed."
+    else
+        echo "Error: Failed to remove '$file_to_remove'."
+    fi
+else
+    echo "Error: Failed to create backup of '$file_to_remove'."
+fi
+
+
+--- End of filebackup.sh ---
+
+#!/bin/bash
+
+echo -n "Enter the file name: "
+read file_name
+
+echo -n "Enter the number of lines to display (x): "
+read x
+
+if [ ! -f "$file_name" ]; then
+    echo "Error: File '$file_name' does not exist."
+    exit 1
+fi
+
+if [ ! -r "$file_name" ]; then
+    echo "Error: File '$file_name' is not readable."
+    exit 1
+fi
+
+total_lines=$(wc -l < "$file_name")
+
+if [ "$x" -gt "$total_lines" ]; then
+    echo "Error: The value of x ($x) exceeds the total number of lines in the file ($total_lines)."
+    exit 1
+fi
+
+echo "Displaying the first $x lines of '$file_name':"
+head -n "$x" "$file_name"
+
+
+--- End of filexlines.sh ---
+
+#!/bin/bash
+
+echo -n "Enter the login name to check: "
+read login_name
+
+if who | grep -q "^$login_name"; then
+    echo "The user '$login_name' is currently logged in."
+else
+    echo "The user '$login_name' is not logged in."
+fi
+
+
+--- End of login.sh ---
+
+#!/bin/bash
+
+output_file="output.txt"
+
+if [ -f "$output_file" ]; then
+    rm "$output_file"
+fi
+
+for file in *; do
+
+    if [ -f "$file" ]; then
+
+        cat "$file" >> "$output_file"
+
+        echo -e "\n\n--- End of $file ---\n" >> "$output_file"
+    fi
+done
+
+echo "All regular files have been copied to '$output_file'."
+
+
+--- End of practice.sh ---
+
